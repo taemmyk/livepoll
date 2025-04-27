@@ -173,7 +173,7 @@ export default function VotePage() {
   // Show voting form for active poll
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md text-gray-600">
         <h1 className="mb-6 text-2xl font-bold text-center">Cast Your Vote</h1>
         
         {voteError && (
@@ -201,7 +201,7 @@ export default function VotePage() {
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
                     required
                   />
-                  <span className="ml-2">{option.text}</span>
+                  <span className="ml-2 text-gray-600">{option.text}</span>
                 </label>
               ))}
             </div>
