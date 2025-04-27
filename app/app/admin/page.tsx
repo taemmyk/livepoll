@@ -279,7 +279,7 @@ function PollCreationForm({ onPollCreated }: PollCreationFormProps) {
             id="pollTitle"
             value={pollTitle}
             onChange={(e) => setPollTitle(e.target.value)}
-            className="block w-full p-2 border border-gray-300 rounded-md"
+            className="block w-full p-2 border border-gray-300 rounded-md text-gray-700"
             placeholder="e.g., What's your favorite color?"
             required
           />
@@ -296,7 +296,7 @@ function PollCreationForm({ onPollCreated }: PollCreationFormProps) {
                 type="text"
                 value={option}
                 onChange={(e) => updateOption(index, e.target.value)}
-                className="block w-full p-2 border border-gray-300 rounded-md"
+                className="block w-full p-2 border border-gray-300 rounded-md text-gray-700"
                 placeholder={`Option ${index + 1}`}
                 required
               />
