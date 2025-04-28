@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import pollService from "../../lib/pollService";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "../auth/[...nextauth]/auth";
 
 // Utility function to check if a user is an admin
 async function isAdmin(req: NextRequest) {
