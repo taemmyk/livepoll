@@ -8,6 +8,8 @@ import {
   CategoryScale,
   LinearScale,
   Tooltip,
+  ChartEvent,
+  ActiveElement,
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 
@@ -99,6 +101,7 @@ export default function VoteClient() {
         anchor: "end" as const,
         align: "center" as const,
         formatter: (value: number) => {
+          if (votesTotal === 0 || value === 0) return "";
           const percent =
             votesTotal > 0 ? ((value / votesTotal) * 100).toFixed(1) : "0.0";
           return `${value} (${percent}%)`;
@@ -132,6 +135,15 @@ export default function VoteClient() {
           drawBorder: false,
         },
       },
+    },
+    onClick: (event: ChartEvent, elements: ActiveElement[]) => {
+      if (!canVote) return;
+
+      if (elements.length > 0) {
+        const index = elements[0].index;
+        if (index === 0) sendVote("A");
+        else if (index === 1) sendVote("B");
+      }
     },
   };
 
