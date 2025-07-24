@@ -8,6 +8,7 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 const votes: Record<"A" | "B", number> = { A: 0, B: 0 };
+let countdown = 3 * 60; // 3 min
 
 app.prepare().then(() => {
   const server = createServer((req, res) => {
@@ -17,9 +18,25 @@ app.prepare().then(() => {
 
   const wss = new WebSocketServer({ server });
 
+  const interval = setInterval(() => {
+    const message = JSON.stringify({ type: "countdown", time: countdown });
+    wss.clients.forEach((client) => {
+      if (client.readyState === 1) {
+        client.send(message);
+      }
+    });
+
+    if (countdown <= 0) {
+      clearInterval(interval);
+    } else {
+      countdown--;
+    }
+  }, 1000);
+
   wss.on("connection", (ws) => {
     console.log("🤝 Client connected");
     ws.send(JSON.stringify({ type: "update", votes }));
+    ws.send(JSON.stringify({ type: "countdown", time: countdown }));
 
     ws.on("message", (msg) => {
       const data = JSON.parse(msg.toString()) as {
