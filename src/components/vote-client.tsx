@@ -8,10 +8,16 @@ import {
   CategoryScale,
   LinearScale,
   Tooltip,
-  Legend,
 } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
-ChartJs.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+ChartJs.register(
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  ChartDataLabels
+);
 
 type VoteData = {
   A: number;
@@ -33,7 +39,6 @@ export default function VoteClient() {
 
     ws.onmessage = (e) => {
       const data = JSON.parse(e.data);
-
       if (
         data.type === "init" ||
         data.type === "update" ||
@@ -54,10 +59,7 @@ export default function VoteClient() {
   }, []);
 
   const sendVote = (option: "A" | "B") => {
-    if (!canVote) {
-      return;
-    }
-
+    if (!canVote) return;
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify({ type: "vote", option }));
     }
@@ -67,20 +69,67 @@ export default function VoteClient() {
     labels: ["Option A", "Option B"],
     datasets: [
       {
-        label: "Votes",
         data: [votes.A, votes.B],
         backgroundColor: ["#007bff", "#dc3545"],
+        borderRadius: 8,
       },
     ],
   };
 
   const chartOptions = {
+    indexAxis: "y" as const,
     responsive: true,
+    layout: {
+      padding: {
+        top: 10,
+        right: 40,
+        bottom: 10,
+        left: 10,
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        enabled: false,
+      },
+      datalabels: {
+        color: "#000",
+        anchor: "end" as const,
+        align: "center" as const,
+        formatter: (value: number) => {
+          const percent =
+            votesTotal > 0 ? ((value / votesTotal) * 100).toFixed(1) : "0.0";
+          return `${value} (${percent}%)`;
+        },
+        font: {
+          weight: "bold" as const,
+          size: 20,
+        },
+      },
+    },
     scales: {
       y: {
-        beginAtZero: true,
         ticks: {
-          precision: 0,
+          font: {
+            size: 20,
+            weight: "bold" as const,
+          },
+          color: "#333",
+        },
+        grid: {
+          display: false,
+          drawBorder: false,
+        },
+      },
+      x: {
+        display: false,
+        beginAtZero: true,
+        max: votesTotal || 1,
+        grid: {
+          display: false,
+          drawBorder: false,
         },
       },
     },
@@ -95,46 +144,44 @@ export default function VoteClient() {
   }
 
   return (
-    <div className="p-6 max-w-xl mx-auto space-y-6">
-      <div className="space-y-4">
-        <div className="flex gap-2 items-center">
-          <input
-            type="number"
-            value={pollDuration}
-            onChange={(e) => {
-              const value = parseInt(e.target.value);
-              if (!isNaN(value)) setPollDuration(value);
-            }}
-            className="w-24 px-2 py-1 border rounded text-neutral-700"
-            min={1}
-            step={1}
-          />
-          <span className="text-neutral-700">minutes</span>
-          <button
-            disabled={canVote}
-            onClick={() => {
-              if (wsRef.current?.readyState === WebSocket.OPEN) {
-                wsRef.current.send(
-                  JSON.stringify({ type: "start", duration: pollDuration })
-                );
-              }
-            }}
-            className="px-4 py-2 bg-green-600 text-white rounded"
-          >
-            Start Poll
-          </button>
+    <div className="p-6 max-w-full mx-auto space-y-6">
+      <div className="flex gap-2 items-center justify-center">
+        <input
+          type="number"
+          value={pollDuration}
+          onChange={(e) => {
+            const value = parseInt(e.target.value);
+            if (!isNaN(value)) setPollDuration(value);
+          }}
+          className="w-24 px-2 py-1 border rounded text-neutral-700"
+          min={1}
+          step={1}
+        />
+        <span className="text-neutral-700">minutes</span>
+        <button
+          disabled={canVote}
+          onClick={() => {
+            if (wsRef.current?.readyState === WebSocket.OPEN) {
+              wsRef.current.send(
+                JSON.stringify({ type: "start", duration: pollDuration })
+              );
+            }
+          }}
+          className="px-4 py-2 bg-green-600 text-white rounded"
+        >
+          Start Poll
+        </button>
 
-          <button
-            onClick={() => {
-              if (wsRef.current?.readyState === WebSocket.OPEN) {
-                wsRef.current.send(JSON.stringify({ type: "end" }));
-              }
-            }}
-            className="px-4 py-2 bg-gray-600 text-white rounded"
-          >
-            End Poll Countdown
-          </button>
-        </div>
+        <button
+          onClick={() => {
+            if (wsRef.current?.readyState === WebSocket.OPEN) {
+              wsRef.current.send(JSON.stringify({ type: "end" }));
+            }
+          }}
+          className="px-4 py-2 bg-gray-600 text-white rounded"
+        >
+          End Poll Countdown
+        </button>
       </div>
 
       <div className="text-center text-lg font-medium text-neutral-700">
@@ -161,7 +208,9 @@ export default function VoteClient() {
         </button>
       </div>
 
-      <Bar data={chartData} options={chartOptions} />
+      <div className="w-full max-w-4xl mx-auto">
+        <Bar data={chartData} options={chartOptions} />
+      </div>
     </div>
   );
 }
