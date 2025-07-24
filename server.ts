@@ -143,7 +143,8 @@ app.prepare().then(() => {
     });
   });
 
-  server.listen(3000, () => {
-    console.log("WS Ready on http://localhost:3000");
+  const port = parseInt(process.env.PORT || "3000", 10);
+  server.listen(port, () => {
+    console.log(`✅ Server ready at http://localhost:${port}`);
   });
 });
