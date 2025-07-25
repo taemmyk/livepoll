@@ -1,187 +1,102 @@
 # LivePoll
-Attempted to revamp 9arm's vibepoll
-- [ ] **Real-time polling** with automatic updates via Server-Sent Events
-- [ ] **Admin panel** with Google OAuth authentication for secure access
-- [ ] **Interactive voting interface** for participants
-- [ ] **Dynamic results page** with animated visualization
-- [ ] **Time limit options** including unlimited time polls
-- [ ] **IP-based vote tracking** to prevent duplicate votes
-- [ ] **Mobile-responsive design** for all devices
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+**LivePoll** is a real-time voting application prototype, rewritten from scratch. It lets users vote between two options, with live-updating results and a countdown timer controlled by the server. Built to explore **WebSocket**, **custom server in Next.js**, and **real-time UI**.
 
-## Getting Started
+---
+Deployed at: [https://livepoll-8hcv.onrender.com](https://livepoll-8hcv.onrender.com)
 
-First, run the development server:
+## 🛠️ Project Background
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This repository was originally forked from [9arm's VibePoll repo](https://github.com/thananon/vibepoll).
+However, after reviewing the original code, I decided to **start over from scratch**, using the same concept but rewriting:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- All frontend and backend code
+- New architecture based on **Next.js 14 App Router**
+- WebSocket instead of Server-Sent Events
+  > The codebase has been fully replaced. The fork is kept only for historical reference.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🙌 Acknowledgments ##
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Thanks to the original [VibePoll project](https://www.youtube.com/watch?v=c8MVDTou5lw&t=575s) for the idea and interface inspiration.
+- This repo is a personal rewrite with architectural changes and updated technologies for educational purpose.
 
-## Learn More
+## 🚀 Feature Roadmap
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Real-time Updates**: WebSocket-powered, no page reloads
+- **Countdown Timer**: Controlled by the server and synchronized across all clients
+- **Live Chart**: Displays votes with animated bar chart using Chart.js
+- **Start/End Poll Controls**: Admin can set poll duration and end it at any time
+- **Deploy-ready**: Runs on Render.com using a custom Node.js server
 
 ---
 
-# VibePoll
+| Feature                                                                                                     | Status      |
+| ----------------------------------------------------------------------------------------------------------- | ----------- |
+| **Real-time polling** with automatic updates: ~~via Server-Sent Events~~ WebSocket-powered, no page reloads | [x] Done    |
+| **Admin panel** with Google OAuth authentication                                                            | [ ] Planned |
+| **Interactive voting interface**: Displays votes with animated bar chart using Chart.js                     | [x] Done    |
+| **Dynamic results page** with animated visualization                                                        | [ ] Planned |
+| **Time limit poll controls**: Admin can set poll duration and end it at any time                            | [x] Done    |
+| **IP-based vote tracking** to prevent duplicate votes                                                       | [ ] Planned |
+| **Mobile-responsive design** for all devices                                                                | [x] Done    |
+| **Deploy-ready**: Runs on Render.com using a custom Node.js server                                          | [x] Done    |
 
-VibePoll is a real-time interactive polling application that allows administrators to create polls and users to vote in them with live results visualization.
+---
 
-## Features
+## 📦 Tech Stack
 
-- **Real-time polling** with automatic updates via Server-Sent Events
-- **Admin panel** with Google OAuth authentication for secure access
-- **Interactive voting interface** for participants
-- **Dynamic results page** with animated visualization
-- **Time limit options** including unlimited time polls
-- **IP-based vote tracking** to prevent duplicate votes
-- **Mobile-responsive design** for all devices
+- [Next.js 15](https://nextjs.org/)
+- [React 19](https://reactjs.org/)
+- [WebSocket (ws)](https://github.com/websockets/ws)
+- [Chart.js](https://www.chartjs.org/)
+- [Render](https://render.com/) for deployment
 
-## Live Demo
+---
 
-[VibePoll Live Demo](https://vibepoll.vercel.app)
+## 🛠️ Getting Started
 
-## Table of Contents
-
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Google OAuth Setup](#google-oauth-setup)
-- [Usage](#usage)
-  - [Admin Access](#admin-access)
-  - [Creating Polls](#creating-polls)
-  - [Voting](#voting)
-  - [Viewing Results](#viewing-results)
-- [Architecture](#architecture)
-- [Deployment](#deployment)
-- [License](#license)
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18.17 or later
-- npm or yarn
-
-### Installation
-
-1. Clone the repository
+1. ### Install dependencies
    ```bash
-   git clone https://github.com/yourusername/vibepoll.git
-   cd vibepoll/app
-   ```
-
-2. Install dependencies
-   ```bash
+   cd ../livepoll
    npm install
    ```
-
-3. Create a `.env.local` file in the app directory with the following:
-   ```
-   # NextAuth.js Configuration
-   NEXTAUTH_URL=http://localhost:3000
-   NEXTAUTH_SECRET=your-nextauth-secret-key
-
-   # Google OAuth
-   GOOGLE_CLIENT_ID=your-google-client-id
-   GOOGLE_CLIENT_SECRET=your-google-client-secret
-
-   # Admin Emails (comma-separated list)
-   ADMIN_EMAILS=your-email@gmail.com
-   ```
-
-4. Start the development server
+2. ### Run the app
+   #### Development
    ```bash
    npm run dev
    ```
+   You can override the port:
+   ```bash
+   PORT=3001 npm start
+   ```
+   - Runs the Next.js app and custom WebSocket server with hot-reloading
+   - WebSocket server runs on the same port (default: localhost:3000)
+   #### Build for Production
+   ```bash
+   npm run build
+   ```
+   This runs:
+   - `next build` — Builds the frontend
+   - `tsc -p tsconfig.server.json` — Compiles `server.ts` to `dist/server.js`
+   #### Start in Production
+   ```bash
+   npm start
+   ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
+## ☁️ Deployment Notes ##
+- The original VibePoll is designed for Vercel, but this version uses custom server, so it’s deployed on Render (Node environment).
+- **Start command**: `npm run build && npm start`
+- Set all secrets in Render dashboard
+- LivePoll is deployed to Render with a custom Node.js server.
 
-### Google OAuth Setup
-
-1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select an existing one
-3. Navigate to "APIs & Services" > "Credentials"
-4. Click "Create Credentials" > "OAuth client ID"
-5. Configure the OAuth consent screen:
-   - Select "External" user type
-   - Add scopes for `email` and `profile`
-   - Add your email as a test user
-6. Create OAuth client ID:
-   - Application type: Web application
-   - Name: VibePoll
-   - Authorized JavaScript origins: `http://localhost:3000`
-   - Authorized redirect URIs: `http://localhost:3000/api/auth/callback/google`
-7. Copy the Client ID and Client Secret to your `.env.local` file
-
-## Usage
-
-### Admin Access
-
-Navigate to `/admin` and sign in with your Google account (must be in the ADMIN_EMAILS list).
-
-### Creating Polls
-
-1. From the admin panel, create a new poll with:
-   - Question title
-   - Multiple answer options
-   - Time limit (1 minute, 2 minutes, custom, or unlimited)
-2. Start the poll when ready
-3. View live results directly from the admin panel
-
-### Voting
-
-1. Navigate to `/vote` or share this URL with participants
-2. Select an option and submit vote
-3. Each IP address can only vote once per poll
-
-### Viewing Results
-
-1. Navigate to `/results` to see real-time poll results
-2. Results update automatically without refreshing the page
-3. Engaging animations show new votes as they arrive
-
-## Architecture
-
-- **Frontend**: Next.js 14 with App Router, React, and Tailwind CSS
-- **Authentication**: NextAuth.js with Google provider
-- **Real-time Updates**: Server-Sent Events (SSE)
-- **State Management**: Singleton service pattern with in-memory storage
-- **Styling**: TailwindCSS for responsive design
-
-## Deployment
-
-The application is optimized for deployment on Vercel:
-
-1. Push your code to a GitHub repository
-2. Connect your repository to Vercel
-3. Configure the environment variables in Vercel dashboard
-4. Deploy!
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details. 
+  ```yaml
+  services:
+  - type: web
+     name: livepoll
+     env: node
+     buildCommand: npm install && npm run build
+     startCommand: npm start
+     envVars: - key: NODE_ENV
+        value: production
+        Render automatically detects the port from the server (process.env.PORT).
+  ```
